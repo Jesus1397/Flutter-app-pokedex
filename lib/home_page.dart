@@ -44,8 +44,7 @@ class _HomePageState extends State<HomePage> {
                           maxCrossAxisExtent: 200,
                           mainAxisExtent: 160,
                           childAspectRatio: 3 / 2,
-                          crossAxisSpacing: 10,
-                          mainAxisSpacing: 10,
+                          crossAxisSpacing: 20,
                         ),
                         physics: const BouncingScrollPhysics(),
                         children: snapshot.data!.map((pokemon) {
@@ -81,17 +80,34 @@ class PokemonBoxWidget extends StatelessWidget {
 
   const PokemonBoxWidget({super.key, required this.pokemon});
 
+  Color getDarkerColor(Color color, [double amount = 0.4]) {
+    final hsl = HSLColor.fromColor(color);
+    final darkerHsl =
+        hsl.withLightness((hsl.lightness - amount).clamp(0.0, 1.0));
+    return darkerHsl.toColor();
+  }
+
   @override
   Widget build(BuildContext context) {
+    final baseColor = getColor(pokemon.type);
+    final darkerColor = getDarkerColor(baseColor);
     return Container(
       decoration: const BoxDecoration(),
-      padding: const EdgeInsets.only(top: 50),
+      padding: const EdgeInsets.only(top: 40),
       child: Container(
         width: 100,
         height: 160,
         decoration: BoxDecoration(
           color: getColor(pokemon.type),
           borderRadius: BorderRadius.circular(20),
+          gradient: LinearGradient(
+            begin: Alignment.bottomCenter,
+            end: Alignment.topCenter,
+            colors: [
+              darkerColor,
+              baseColor,
+            ],
+          ),
         ),
         child: Stack(
           clipBehavior: Clip.none,
@@ -114,7 +130,7 @@ class PokemonBoxWidget extends StatelessWidget {
               ),
             ),
             Positioned(
-              bottom: 10,
+              bottom: 5,
               left: 10,
               right: 10,
               child: Container(
@@ -124,7 +140,7 @@ class PokemonBoxWidget extends StatelessWidget {
                   vertical: 5,
                 ),
                 decoration: BoxDecoration(
-                  color: Colors.grey[400],
+                  color: const Color.fromARGB(0, 189, 189, 189),
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Row(
@@ -132,7 +148,9 @@ class PokemonBoxWidget extends StatelessWidget {
                     Text(
                       '#${pokemon.num}',
                       style: const TextStyle(
-                        fontSize: 12,
+                        fontSize: 14,
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
                     const SizedBox(width: 10),
@@ -140,7 +158,9 @@ class PokemonBoxWidget extends StatelessWidget {
                       child: Text(
                         pokemon.name,
                         style: const TextStyle(
-                          fontSize: 12,
+                          fontSize: 14,
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
                         ),
                         overflow: TextOverflow.ellipsis,
                         textAlign: TextAlign.right,

@@ -28,41 +28,41 @@ Future<List<Pokemon>> getPokemons() async {
 getColor(List<Type> type) {
   switch (type.first.toString()) {
     case 'Type.FIRE':
-      return const Color(0xffF76C6C).withOpacity(0.8);
+      return const Color(0xffEB8E59).withOpacity(1);
     case 'Type.ICE':
-      return const Color(0xff98D8D8).withOpacity(0.8);
+      return const Color(0xff98D8D8).withOpacity(1);
     case 'Type.FLYING':
-      return const Color(0xffA890F0).withOpacity(0.8);
+      return const Color(0xffA890F0).withOpacity(1);
     case 'Type.PSYCHIC':
-      return const Color(0xffA040A0).withOpacity(0.8);
+      return const Color(0xffA040A0).withOpacity(1);
     case 'Type.WATER':
-      return const Color(0xff6890F0).withOpacity(0.8);
+      return const Color(0xff68D9ED).withOpacity(1);
     case 'Type.GROUND':
-      return const Color(0xffE0C068).withOpacity(0.8);
+      return const Color(0xffE0C068).withOpacity(1);
     case 'Type.ROCK':
-      return const Color(0xffB8A038).withOpacity(0.8);
+      return const Color(0xffB8A038).withOpacity(1);
     case 'Type.ELECTRIC':
-      return const Color(0xffF8D030).withOpacity(0.8);
+      return const Color(0xffF8D030).withOpacity(1);
     case 'Type.GRASS':
-      return const Color(0xff78C850).withOpacity(0.8);
+      return const Color(0xff75E3AD).withOpacity(1);
     case 'Type.FIGHTING':
-      return const Color(0xffC03028).withOpacity(0.8);
+      return const Color(0xffC03028).withOpacity(1);
     case 'Type.POISON':
-      return const Color(0xffA040A0).withOpacity(0.8);
+      return const Color(0xffA040A0).withOpacity(1);
     case 'Type.BUG':
-      return const Color(0xffA8B820).withOpacity(0.8);
+      return const Color(0xffA8B820).withOpacity(1);
     case 'Type.FAIRY':
-      return const Color(0xffF0B6BC).withOpacity(0.8);
+      return const Color(0xffF0B6BC).withOpacity(1);
     case 'Type.GHOST':
-      return const Color(0xff705898).withOpacity(0.8);
+      return const Color(0xff705898).withOpacity(1);
     case 'Type.DARK':
-      return const Color(0xff705848).withOpacity(0.8);
+      return const Color(0xff705848).withOpacity(1);
     case 'Type.STEEL':
-      return const Color(0xffB8B8D0).withOpacity(0.8);
+      return const Color(0xffB8B8D0).withOpacity(1);
     case 'Type.DRAGON':
-      return const Color(0xff7038F8).withOpacity(0.8);
+      return const Color(0xff7038F8).withOpacity(1);
     case 'Type.NORMAL':
-      return const Color(0xffA8A878).withOpacity(0.8);
+      return const Color(0xffA8A878).withOpacity(1);
     default:
   }
 }
