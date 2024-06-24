@@ -36,7 +36,7 @@ getColor(List<Type> type) {
     case 'Type.PSYCHIC':
       return const Color(0xffA040A0).withOpacity(1);
     case 'Type.WATER':
-      return const Color(0xff68D9ED).withOpacity(1);
+      return const Color(0xff6EE1F4).withOpacity(1);
     case 'Type.GROUND':
       return const Color(0xffE0C068).withOpacity(1);
     case 'Type.ROCK':

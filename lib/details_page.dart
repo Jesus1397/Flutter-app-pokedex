@@ -54,6 +54,15 @@ class DetailsPage extends StatelessWidget {
     Size size = MediaQuery.of(context).size;
     final color = getColor(args.type);
 
+    Color getDarkerColor(Color color, [double amount = 0.4]) {
+      final hsl = HSLColor.fromColor(color);
+      final darkerHsl =
+          hsl.withLightness((hsl.lightness - amount).clamp(0.0, 1.0));
+      return darkerHsl.toColor();
+    }
+
+    final colorDark = getDarkerColor(color);
+
     return Scaffold(
       body: SafeArea(
         child: Stack(
@@ -121,7 +130,7 @@ class DetailsPage extends StatelessWidget {
                   ),
                   Container(
                     decoration: BoxDecoration(
-                      color: color,
+                      color: colorDark,
                       borderRadius: BorderRadius.circular(50),
                     ),
                     padding:
@@ -147,12 +156,12 @@ class DetailsPage extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    _buildStatRow('HP', 45, color),
-                    _buildStatRow('Attack', 56, color),
-                    _buildStatRow('Defense', 48, color),
-                    _buildStatRow('Sp. Atk', 45, color),
-                    _buildStatRow('Sp. Def', 37, color),
-                    _buildStatRow('Speed', 34, color),
+                    _buildStatRow('HP', 45, colorDark),
+                    _buildStatRow('Attack', 56, colorDark),
+                    _buildStatRow('Defense', 48, colorDark),
+                    _buildStatRow('Sp. Atk', 45, colorDark),
+                    _buildStatRow('Sp. Def', 37, colorDark),
+                    _buildStatRow('Speed', 34, colorDark),
                   ],
                 ),
               ),

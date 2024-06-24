@@ -1,6 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-
 import 'models/pokemon_model.dart';
 import 'utils/utils.dart';
 
@@ -17,58 +16,81 @@ class _HomePageState extends State<HomePage> {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       body: SafeArea(
-        child: Container(
-          width: size.width,
-          height: size.height,
-          padding: const EdgeInsets.only(left: 10, right: 10, top: 10),
-          child: Column(
-            children: [
-              const Image(
-                image: AssetImage('assets/pokemon_logo.png'),
-                height: 60,
-              ),
-              const SizedBox(height: 10),
-              const SearchWidget(),
-              const SizedBox(height: 10),
-              Expanded(
-                child: FutureBuilder(
-                  future: getPokemons(),
-                  builder: (
-                    BuildContext context,
-                    AsyncSnapshot<List<Pokemon>> snapshot,
-                  ) {
-                    if (snapshot.hasData) {
-                      return GridView(
-                        gridDelegate:
-                            const SliverGridDelegateWithMaxCrossAxisExtent(
-                          maxCrossAxisExtent: 200,
-                          mainAxisExtent: 160,
-                          childAspectRatio: 3 / 2,
-                          crossAxisSpacing: 20,
-                        ),
-                        physics: const BouncingScrollPhysics(),
-                        children: snapshot.data!.map((pokemon) {
-                          return GestureDetector(
-                            child: PokemonBoxWidget(
-                              pokemon: pokemon,
+        child: Stack(
+          children: [
+            Container(
+              width: size.width,
+              height: size.height,
+              padding: const EdgeInsets.only(left: 10, right: 10, top: 15),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Icon(
+                    Icons.menu,
+                    size: 30,
+                    color: Colors.black,
+                  ),
+                  const SizedBox(height: 10),
+                  const Text(
+                    'Pokedex',
+                    style: TextStyle(
+                      fontSize: 34,
+                      fontWeight: FontWeight.w900,
+                      color: Colors.black,
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  const SearchWidget(),
+                  Expanded(
+                    child: FutureBuilder(
+                      future: getPokemons(),
+                      builder: (
+                        BuildContext context,
+                        AsyncSnapshot<List<Pokemon>> snapshot,
+                      ) {
+                        if (snapshot.hasData) {
+                          return GridView(
+                            gridDelegate:
+                                const SliverGridDelegateWithMaxCrossAxisExtent(
+                              maxCrossAxisExtent: 200,
+                              mainAxisExtent: 170,
+                              childAspectRatio: 3 / 2,
+                              crossAxisSpacing: 20,
                             ),
-                            onTap: () {
-                              Navigator.pushNamed(
-                                context,
-                                'details',
-                                arguments: pokemon,
+                            physics: const BouncingScrollPhysics(),
+                            children: snapshot.data!.map((pokemon) {
+                              return GestureDetector(
+                                child: PokemonBoxWidget(
+                                  pokemon: pokemon,
+                                ),
+                                onTap: () {
+                                  Navigator.pushNamed(
+                                    context,
+                                    'details',
+                                    arguments: pokemon,
+                                  );
+                                },
                               );
-                            },
+                            }).toList(),
                           );
-                        }).toList(),
-                      );
-                    }
-                    return const Center(child: CircularProgressIndicator());
-                  },
-                ),
+                        }
+                        return const Center(child: CircularProgressIndicator());
+                      },
+                    ),
+                  ),
+                ],
               ),
-            ],
-          ),
+            ),
+            Positioned(
+              top: 15,
+              right: 10,
+              child: Image.asset(
+                'assets/pokemon_logo.png',
+                height: 50,
+                width: 50,
+              ),
+            ),
+          ],
         ),
       ),
     );
@@ -113,7 +135,7 @@ class PokemonBoxWidget extends StatelessWidget {
           clipBehavior: Clip.none,
           children: [
             Positioned(
-              top: -60,
+              top: -50,
               left: 0,
               right: 0,
               child: Hero(
@@ -136,7 +158,7 @@ class PokemonBoxWidget extends StatelessWidget {
               child: Container(
                 height: 30,
                 padding: const EdgeInsets.symmetric(
-                  horizontal: 10,
+                  horizontal: 5,
                   vertical: 5,
                 ),
                 decoration: BoxDecoration(
@@ -191,18 +213,26 @@ class _SearchWidgetState extends State<SearchWidget> {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(
-        horizontal: 30,
+        horizontal: 4,
       ),
       decoration: BoxDecoration(
-        color: Colors.grey[200],
+        color: const Color(0xffBCBCBC),
         borderRadius: BorderRadius.circular(50),
       ),
       child: TextFormField(
-        textAlign: TextAlign.center,
+        textAlign: TextAlign.left,
+        textAlignVertical: TextAlignVertical.center,
         controller: textController,
         decoration: const InputDecoration(
           border: InputBorder.none,
           hintText: 'Search pokemon',
+          hintStyle: TextStyle(
+            color: Colors.white,
+          ),
+          prefixIcon: Icon(
+            Icons.search,
+            color: Colors.white,
+          ),
         ),
       ),
     );
