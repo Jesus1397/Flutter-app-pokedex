@@ -40,7 +40,7 @@ class DetailsPage extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -64,22 +64,20 @@ class DetailsPage extends StatelessWidget {
                     ],
                   ),
                   const SizedBox(height: 16),
-                  Text(
-                    args.name,
-                    style: const TextStyle(
-                      fontSize: 36,
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                    ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Text(
+                        args.name,
+                        style: const TextStyle(
+                          fontSize: 36,
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
                   ),
-                ],
-              ),
-            ),
-            Positioned(
-              left: size.width * 0.5 - 100,
-              top: size.height * 0.3 - 100,
-              child: Column(
-                children: [
+                  const Spacer(),
                   Hero(
                     tag: '${args.id}',
                     child: CachedNetworkImage(
@@ -110,64 +108,54 @@ class DetailsPage extends StatelessWidget {
                       ),
                     ),
                   ),
+                  const Spacer(),
+                  PokemonStatsWidget(
+                    title: 'HP',
+                    value: 45,
+                    color: colorDark,
+                  ),
+                  PokemonStatsWidget(
+                    title: 'Attack',
+                    value: 56,
+                    color: colorDark,
+                  ),
+                  PokemonStatsWidget(
+                    title: 'Defense',
+                    value: 48,
+                    color: colorDark,
+                  ),
+                  PokemonStatsWidget(
+                    title: 'Sp. Atk',
+                    value: 45,
+                    color: colorDark,
+                  ),
+                  PokemonStatsWidget(
+                    title: 'Sp. Def',
+                    value: 37,
+                    color: colorDark,
+                  ),
+                  PokemonStatsWidget(
+                    title: 'Speed',
+                    value: 34,
+                    color: colorDark,
+                  ),
+                  const Spacer(),
+                  Text(
+                    'Evolutions',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: colorDark,
+                      fontSize: 16,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  EvolutionRowWidget(
+                    prevEvolutionImages: args.prevEvolutionImages,
+                    nextEvolutionImages: args.nextEvolutionImages,
+                    img: args.img,
+                    colorDark: colorDark,
+                  ),
                 ],
-              ),
-            ),
-            Positioned(
-              bottom: 8,
-              left: 0,
-              right: 0,
-              child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    PokemonStatsWidget(
-                      title: 'HP',
-                      value: 45,
-                      color: colorDark,
-                    ),
-                    PokemonStatsWidget(
-                      title: 'Attack',
-                      value: 56,
-                      color: colorDark,
-                    ),
-                    PokemonStatsWidget(
-                      title: 'Defense',
-                      value: 48,
-                      color: colorDark,
-                    ),
-                    PokemonStatsWidget(
-                      title: 'Sp. Atk',
-                      value: 45,
-                      color: colorDark,
-                    ),
-                    PokemonStatsWidget(
-                      title: 'Sp. Def',
-                      value: 37,
-                      color: colorDark,
-                    ),
-                    PokemonStatsWidget(
-                      title: 'Speed',
-                      value: 34,
-                      color: colorDark,
-                    ),
-                    const SizedBox(height: 8),
-                    const Text(
-                      'Evolutions',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
-                      ),
-                    ),
-                    EvolutionRowWidget(
-                      prevEvolutionImages: args.prevEvolutionImages,
-                      nextEvolutionImages: args.nextEvolutionImages,
-                      img: args.img,
-                      colorDark: colorDark,
-                    ),
-                  ],
-                ),
               ),
             ),
           ],

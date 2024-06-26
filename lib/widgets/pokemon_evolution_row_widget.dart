@@ -78,6 +78,7 @@ class EvolutionDivider extends StatelessWidget {
       height: 80,
       decoration: BoxDecoration(
         color: colorDark,
+        borderRadius: BorderRadius.circular(8),
       ),
     );
   }
