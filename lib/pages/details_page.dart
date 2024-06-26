@@ -114,7 +114,7 @@ class DetailsPage extends StatelessWidget {
               ),
             ),
             Positioned(
-              bottom: 20,
+              bottom: 8,
               left: 0,
               right: 0,
               child: Container(
@@ -152,12 +152,12 @@ class DetailsPage extends StatelessWidget {
                       value: 34,
                       color: colorDark,
                     ),
-                    const SizedBox(height: 16),
+                    const SizedBox(height: 8),
                     const Text(
                       'Evolutions',
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
-                        fontSize: 24,
+                        fontSize: 16,
                       ),
                     ),
                     EvolutionRowWidget(
