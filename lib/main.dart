@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_app_pokedex/providers/pokemon_provider.dart';
 import 'package:provider/provider.dart';
 
-import 'details_page.dart';
-import 'home_page.dart';
+import 'pages/details_page.dart';
+import 'pages/home_page.dart';
 
 void main() {
   runApp(

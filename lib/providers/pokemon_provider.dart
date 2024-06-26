@@ -11,11 +11,15 @@ class PokemonProvider with ChangeNotifier {
   Pokemon? get selectedPokemon => _selectedPokemon;
 
   Future<void> fetchPokemons() async {
+    isLoading = true;
+
     _pokemons = await getPokemons();
     await Future.wait(_pokemons.map((pokemon) => getImagesEvolution(
         pokemons: _pokemons,
         numPokemon: pokemon.num,
         currentPokemon: pokemon)));
+
+    isLoading = false;
     notifyListeners();
   }
 
