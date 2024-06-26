@@ -1,5 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_app_pokedex/providers/pokemon_provider.dart';
+import 'package:provider/provider.dart';
 import 'models/pokemon_model.dart';
 import 'utils/utils.dart';
 
@@ -12,12 +14,27 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   @override
+  void initState() {
+    super.initState();
+    Provider.of<PokemonProvider>(context, listen: false).fetchPokemons();
+  }
+
+  @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       body: SafeArea(
         child: Stack(
           children: [
+            Positioned(
+              top: -size.height * 0.15,
+              right: -size.height * 0.15,
+              child: Image.asset(
+                'assets/game.png',
+                height: size.height * 0.45,
+                width: size.height * 0.45,
+              ),
+            ),
             Container(
               width: size.width,
               height: size.height,
@@ -41,14 +58,14 @@ class _HomePageState extends State<HomePage> {
                   ),
                   const SizedBox(height: 10),
                   const SearchWidget(),
+                  const SizedBox(height: 10),
                   Expanded(
-                    child: FutureBuilder(
-                      future: getPokemons(),
-                      builder: (
-                        BuildContext context,
-                        AsyncSnapshot<List<Pokemon>> snapshot,
-                      ) {
-                        if (snapshot.hasData) {
+                    child: Consumer<PokemonProvider>(
+                      builder: (context, pokemonProvider, child) {
+                        if (pokemonProvider.isLoading) {
+                          return const Center(
+                              child: CircularProgressIndicator());
+                        } else if (pokemonProvider.pokemons.isNotEmpty) {
                           return GridView(
                             gridDelegate:
                                 const SliverGridDelegateWithMaxCrossAxisExtent(
@@ -58,36 +75,27 @@ class _HomePageState extends State<HomePage> {
                               crossAxisSpacing: 20,
                             ),
                             physics: const BouncingScrollPhysics(),
-                            children: snapshot.data!.map((pokemon) {
+                            children: pokemonProvider.pokemons.map((pokemon) {
                               return GestureDetector(
                                 child: PokemonBoxWidget(
                                   pokemon: pokemon,
                                 ),
                                 onTap: () {
-                                  Navigator.pushNamed(
-                                    context,
-                                    'details',
-                                    arguments: pokemon,
-                                  );
+                                  Provider.of<PokemonProvider>(context,
+                                          listen: false)
+                                      .selectPokemon(pokemon);
+                                  Navigator.pushNamed(context, 'details');
                                 },
                               );
                             }).toList(),
                           );
+                        } else {
+                          return const Center(child: Text("No Pokémon found."));
                         }
-                        return const Center(child: CircularProgressIndicator());
                       },
                     ),
                   ),
                 ],
-              ),
-            ),
-            Positioned(
-              top: 15,
-              right: 10,
-              child: Image.asset(
-                'assets/pokemon_logo.png',
-                height: 50,
-                width: 50,
               ),
             ),
           ],
@@ -101,13 +109,6 @@ class PokemonBoxWidget extends StatelessWidget {
   final Pokemon pokemon;
 
   const PokemonBoxWidget({super.key, required this.pokemon});
-
-  Color getDarkerColor(Color color, [double amount = 0.4]) {
-    final hsl = HSLColor.fromColor(color);
-    final darkerHsl =
-        hsl.withLightness((hsl.lightness - amount).clamp(0.0, 1.0));
-    return darkerHsl.toColor();
-  }
 
   @override
   Widget build(BuildContext context) {

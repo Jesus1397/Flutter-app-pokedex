@@ -38,10 +38,13 @@ class Pokemon {
     required this.weight,
     required this.candy,
     required this.candyCount,
-    required this.egg,
     required this.spawnChance,
     required this.avgSpawns,
     required this.spawnTime,
+    this.nextEvolution,
+    this.prevEvolution,
+    this.nextEvolutionImages,
+    this.prevEvolutionImages,
   });
 
   int id;
@@ -53,10 +56,13 @@ class Pokemon {
   String weight;
   String candy;
   int candyCount;
-  Egg egg;
   double spawnChance;
   double avgSpawns;
   String spawnTime;
+  List<Evolution>? nextEvolution;
+  List<Evolution>? prevEvolution;
+  List<String>? nextEvolutionImages;
+  List<String>? prevEvolutionImages;
 
   factory Pokemon.fromJson(Map<String, dynamic> json) => Pokemon(
         id: json["id"],
@@ -68,10 +74,17 @@ class Pokemon {
         weight: json["weight"],
         candy: json["candy"],
         candyCount: json["candy_count"] ?? 0,
-        egg: eggValues.map[json["egg"]] ?? Egg.NOT_IN_EGGS,
         spawnChance: json["spawn_chance"].toDouble(),
         avgSpawns: json["avg_spawns"].toDouble(),
         spawnTime: json["spawn_time"],
+        nextEvolution: json["next_evolution"] == null
+            ? []
+            : List<Evolution>.from(
+                json["next_evolution"]!.map((x) => Evolution.fromJson(x))),
+        prevEvolution: json["prev_evolution"] == null
+            ? []
+            : List<Evolution>.from(
+                json["prev_evolution"]!.map((x) => Evolution.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {
@@ -84,31 +97,26 @@ class Pokemon {
         "weight": weight,
         "candy": candy,
         "candy_count": candyCount,
-        "egg": eggValues.reverse[egg],
         "spawn_chance": spawnChance,
         "avg_spawns": avgSpawns,
         "spawn_time": spawnTime,
+        "next_evolution": nextEvolution == null
+            ? []
+            : List<dynamic>.from(nextEvolution!.map((x) => x.toJson())),
+        "prev_evolution": prevEvolution == null
+            ? []
+            : List<dynamic>.from(prevEvolution!.map((x) => x.toJson())),
       };
 }
 
-enum Egg { THE_2_KM, NOT_IN_EGGS, THE_5_KM, THE_10_KM, OMANYTE_CANDY }
-
-final eggValues = EnumValues({
-  "Not in Eggs": Egg.NOT_IN_EGGS,
-  "Omanyte Candy": Egg.OMANYTE_CANDY,
-  "10 km": Egg.THE_10_KM,
-  "2 km": Egg.THE_2_KM,
-  "5 km": Egg.THE_5_KM
-});
-
 class Evolution {
+  String num;
+  String name;
+
   Evolution({
     required this.num,
     required this.name,
   });
-
-  String num;
-  String name;
 
   factory Evolution.fromJson(Map<String, dynamic> json) => Evolution(
         num: json["num"],

@@ -1,31 +1,14 @@
 import 'package:flutter/material.dart';
+import '../models/pokemon_model.dart';
 import 'package:http/http.dart' as http;
 
-import '../models/pokemon_model.dart';
-
-Future<List<Pokemon>> getPokemons() async {
-  Pokemons pokemonData;
-  List<Pokemon> pokemons = [];
-  http.Response response;
-  String jsonResponse;
-
-  var url = Uri.https(
-    'raw.githubusercontent.com',
-    '/Biuni/PokemonGO-Pokedex/master/pokedex.json',
-  );
-
-  response = await http.get(url);
-  jsonResponse = response.body;
-  pokemonData = pokemonsFromJson(jsonResponse);
-
-  for (var pokemon in pokemonData.pokemon) {
-    pokemons.add(pokemon);
-  }
-
-  return pokemons;
+Color getDarkerColor(Color color, [double amount = 0.4]) {
+  final hsl = HSLColor.fromColor(color);
+  final darkerHsl = hsl.withLightness((hsl.lightness - amount).clamp(0.0, 1.0));
+  return darkerHsl.toColor();
 }
 
-getColor(List<Type> type) {
+Color getColor(List<Type> type) {
   switch (type.first.toString()) {
     case 'Type.FIRE':
       return const Color(0xffEB8E59).withOpacity(1);
@@ -64,10 +47,11 @@ getColor(List<Type> type) {
     case 'Type.NORMAL':
       return const Color(0xffA8A878).withOpacity(1);
     default:
+      return Colors.white;
   }
 }
 
-getType1(List<Type> type) {
+String getType1(List<Type> type) {
   switch (type[0].toString()) {
     case 'Type.FIRE':
       return "Fire";
@@ -110,7 +94,7 @@ getType1(List<Type> type) {
   }
 }
 
-getType2(List<Type> type) {
+String getType2(List<Type> type) {
   switch (type[1].toString()) {
     case 'Type.FIRE':
       return "Fire";
@@ -151,4 +135,59 @@ getType2(List<Type> type) {
     default:
       return '';
   }
+}
+
+Future<List<Pokemon>> getPokemons() async {
+  Pokemons pokemonData;
+  List<Pokemon> pokemons = [];
+  http.Response response;
+  String jsonResponse;
+
+  var url = Uri.https(
+    'raw.githubusercontent.com',
+    '/Biuni/PokemonGO-Pokedex/master/pokedex.json',
+  );
+
+  response = await http.get(url);
+  jsonResponse = response.body;
+  pokemonData = pokemonsFromJson(jsonResponse);
+
+  for (var pokemon in pokemonData.pokemon) {
+    pokemons.add(pokemon);
+  }
+
+  return pokemons;
+}
+
+Future<void> getImagesEvolution({
+  required List<Pokemon> pokemons,
+  required String numPokemon,
+  required Pokemon currentPokemon,
+}) async {
+  try {
+    final targetPokemon = pokemons.firstWhere((p) => p.num == numPokemon);
+
+    if (targetPokemon.nextEvolution != null) {
+      currentPokemon.nextEvolutionImages = targetPokemon.nextEvolution!
+          .map((evo) => _getImageUrl(evo.num))
+          .toList();
+    } else {
+      currentPokemon.nextEvolutionImages = [];
+    }
+
+    if (targetPokemon.prevEvolution != null) {
+      currentPokemon.prevEvolutionImages = targetPokemon.prevEvolution!
+          .map((evo) => _getImageUrl(evo.num))
+          .toList();
+    } else {
+      currentPokemon.prevEvolutionImages = [];
+    }
+  } catch (e) {
+    // ignore: avoid_print
+    print(e);
+  }
+}
+
+String _getImageUrl(String pokemonNum) {
+  return "http://www.serebii.net/pokemongo/pokemon/${pokemonNum.padLeft(3, '0')}.png";
 }

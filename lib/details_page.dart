@@ -1,5 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_app_pokedex/providers/pokemon_provider.dart';
+import 'package:provider/provider.dart';
 
 import 'models/pokemon_model.dart';
 import 'utils/utils.dart';
@@ -7,60 +9,21 @@ import 'utils/utils.dart';
 class DetailsPage extends StatelessWidget {
   const DetailsPage({super.key});
 
-  Widget _buildStatRow(String title, int value, Color color) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: Row(
-        children: [
-          Expanded(
-            flex: 1,
-            child: Text(
-              title,
-              style: const TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-          Expanded(
-            flex: 1,
-            child: Text(
-              value.toString(),
-              style: const TextStyle(
-                fontSize: 16,
-                color: Color.fromARGB(255, 206, 206, 206),
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-          Expanded(
-            flex: 3,
-            child: LinearProgressIndicator(
-              value: value / 100,
-              color: color,
-              minHeight: 8,
-              borderRadius: BorderRadius.circular(8),
-              backgroundColor: const Color.fromARGB(255, 206, 206, 206),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
-    final Pokemon args = ModalRoute.of(context)?.settings.arguments as Pokemon;
-    Size size = MediaQuery.of(context).size;
-    final color = getColor(args.type);
+    final pokemonProvider = Provider.of<PokemonProvider>(context);
+    final Pokemon? args = pokemonProvider.selectedPokemon;
 
-    Color getDarkerColor(Color color, [double amount = 0.4]) {
-      final hsl = HSLColor.fromColor(color);
-      final darkerHsl =
-          hsl.withLightness((hsl.lightness - amount).clamp(0.0, 1.0));
-      return darkerHsl.toColor();
+    if (args == null) {
+      return const Scaffold(
+        body: Center(
+          child: Text("No Pokemon selected"),
+        ),
+      );
     }
 
+    Size size = MediaQuery.of(context).size;
+    final color = getColor(args.type);
     final colorDark = getDarkerColor(color);
 
     return Scaffold(
@@ -162,6 +125,100 @@ class DetailsPage extends StatelessWidget {
                     _buildStatRow('Sp. Atk', 45, colorDark),
                     _buildStatRow('Sp. Def', 37, colorDark),
                     _buildStatRow('Speed', 34, colorDark),
+                    const SizedBox(height: 16),
+                    const Text(
+                      'Evolutions',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 24,
+                      ),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        if (args.prevEvolutionImages != [])
+                          for (var i = 0;
+                              i < args.prevEvolutionImages!.length;
+                              i++)
+                            Row(
+                              children: [
+                                const SizedBox(
+                                  width: 16,
+                                ),
+                                CachedNetworkImage(
+                                  imageUrl: args.prevEvolutionImages![i],
+                                  placeholder: (context, url) => const Center(
+                                    child: CircularProgressIndicator(),
+                                  ),
+                                  errorWidget: (context, url, error) =>
+                                      const Icon(Icons.error),
+                                  fit: BoxFit.fill,
+                                  width: 80,
+                                  height: 80,
+                                ),
+                                const SizedBox(
+                                  width: 16,
+                                ),
+                                Container(
+                                  width: 4,
+                                  height: 80,
+                                  decoration: BoxDecoration(
+                                    color: colorDark,
+                                  ),
+                                ),
+                              ],
+                            ),
+                        const SizedBox(
+                          width: 16,
+                        ),
+                        CachedNetworkImage(
+                          imageUrl: args.img,
+                          placeholder: (context, url) => const Center(
+                            child: CircularProgressIndicator(),
+                          ),
+                          errorWidget: (context, url, error) =>
+                              const Icon(Icons.error),
+                          fit: BoxFit.fill,
+                          width: 80,
+                          height: 80,
+                        ),
+                        const SizedBox(
+                          width: 16,
+                        ),
+                        if (args.nextEvolutionImages != [])
+                          for (var i = 0;
+                              i < args.nextEvolutionImages!.length;
+                              i++)
+                            Row(
+                              children: [
+                                Container(
+                                  width: 4,
+                                  height: 80,
+                                  decoration: BoxDecoration(
+                                    color: colorDark,
+                                  ),
+                                ),
+                                const SizedBox(
+                                  width: 16,
+                                ),
+                                CachedNetworkImage(
+                                  imageUrl: args.nextEvolutionImages![i],
+                                  placeholder: (context, url) => const Center(
+                                    child: CircularProgressIndicator(),
+                                  ),
+                                  errorWidget: (context, url, error) =>
+                                      const Icon(Icons.error),
+                                  fit: BoxFit.fill,
+                                  width: 80,
+                                  height: 80,
+                                ),
+                                const SizedBox(
+                                  width: 16,
+                                ),
+                              ],
+                            ),
+                      ],
+                    )
                   ],
                 ),
               ),
@@ -171,19 +228,53 @@ class DetailsPage extends StatelessWidget {
       ),
     );
   }
+
+  Widget _buildStatRow(String title, int value, Color color) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: Row(
+        children: [
+          Expanded(
+            flex: 1,
+            child: Text(
+              title,
+              style: const TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          Expanded(
+            flex: 1,
+            child: Text(
+              value.toString(),
+              style: const TextStyle(
+                fontSize: 16,
+                color: Color.fromARGB(255, 206, 206, 206),
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          Expanded(
+            flex: 3,
+            child: LinearProgressIndicator(
+              value: value / 100,
+              color: color,
+              minHeight: 8,
+              borderRadius: BorderRadius.circular(8),
+              backgroundColor: const Color.fromARGB(255, 206, 206, 206),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 }
 
 class CurvedPainter extends CustomPainter {
   final Color color;
 
   CurvedPainter(this.color);
-
-  Color getDarkerColor(Color color, [double amount = 0.4]) {
-    final hsl = HSLColor.fromColor(color);
-    final darkerHsl =
-        hsl.withLightness((hsl.lightness - amount).clamp(0.0, 1.0));
-    return darkerHsl.toColor();
-  }
 
   @override
   void paint(Canvas canvas, Size size) {
